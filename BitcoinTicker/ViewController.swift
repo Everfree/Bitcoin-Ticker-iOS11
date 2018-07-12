@@ -52,6 +52,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
 	//Constructs the finalURL from the baseURL and the selected currency
 	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
 		finalURL = baseURL + currencyArray[row]
+		getBitcoinValue()
 	}//pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     
 	
@@ -60,10 +61,10 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
 	
 	//gets the Bitcoin value in the selected currency from bitcoinaverage.com using Alamofire
 	//passes the JSON from the API call to updateTicker method
-    func getBitcoinValue(url: String) {
+    func getBitcoinValue() {
 		
 		//Make the API call
-        Alamofire.request(url, method: .get)
+        Alamofire.request(finalURL, method: .get)
             .responseJSON { response in
 				//if call is successful
                 if response.result.isSuccess {
@@ -82,7 +83,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
                     self.bitcoinPriceLabel.text = "Connection Issues"
                 }
             }
-    }//getBitcoinValue(url: String)
+    }//getBitcoinValue()
 	
 	
     //MARK: - JSON Parsing
