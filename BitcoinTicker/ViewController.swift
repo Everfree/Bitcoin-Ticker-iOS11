@@ -16,6 +16,8 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     let baseURL = "https://apiv2.bitcoinaverage.com/indices/global/ticker/BTC"
 	//Array of currencies supported
     let currencyArray = ["AUD", "BRL","CAD","CNY","EUR","GBP","HKD","IDR","ILS","INR","JPY","MXN","NOK","NZD","PLN","RON","RUB","SEK","SGD","USD","ZAR"]
+	//Array of currency symbols in the same order as the currencies in currencyArray
+	let currencySymArray = ["$", "R$", "$", "¥", "€", "£", "$", "Rp", "₪", "₹", "¥", "$", "kr", "$", "zł", "lei", "₽", "kr", "$", "$", "R"]
 	//Final URL that will be used for the API call, Base URL + currency
     var finalURL = ""
 
@@ -52,7 +54,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
 	//Constructs the finalURL from the baseURL and the selected currency
 	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
 		finalURL = baseURL + currencyArray[row]
-		getBitcoinValue()
+		getBitcoinValue(curSymIndex: row)
 	}//pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     
 	
@@ -61,7 +63,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
 	
 	//gets the Bitcoin value in the selected currency from bitcoinaverage.com using Alamofire
 	//passes the JSON from the API call to updateTicker method
-    func getBitcoinValue() {
+	func getBitcoinValue(curSymIndex: Int) {
 		
 		//Make the API call
         Alamofire.request(finalURL, method: .get)
@@ -73,7 +75,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
                     let valueJSON : JSON = JSON(response.result.value!)
 					
 					//pass the JSON to updateTicker method
-                    self.updateTicker(json: valueJSON)
+					self.updateTicker(json: valueJSON, curSymIndex: curSymIndex)
 
 					
                 }
@@ -90,12 +92,12 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     /***************************************************************/
 	
 	//Pulls the value data from the JSON and updates bitcoinPriceLabel with it
-    func updateTicker(json : JSON) {
+    func updateTicker(json : JSON, curSymIndex: Int) {
 		
 		//if the value exists
         if let valueResult = json["last"].double {
 			//update the label with the Bitcoin Value
-			bitcoinPriceLabel.text = "\(valueResult)"
+			bitcoinPriceLabel.text = (currencySymArray[curSymIndex]) + "\(valueResult)"
 			
 		}
 		//if the value doesn't exist
