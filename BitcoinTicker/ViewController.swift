@@ -28,8 +28,12 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		//setup currencyPicker's delegate and datasource
 		currencyPicker.delegate = self
 		currencyPicker.dataSource = self
+		
+		//initialize bitcoinPriceLabel to show the bitcoin value for the first currency in the list
+		pickerView(currencyPicker, didSelectRow: 0, inComponent: 0)
     }//viewDidLoad()
 
     
